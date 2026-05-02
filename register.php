@@ -1,4 +1,44 @@
+<?php
+session_start();
+require 'db.php';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = $_POST['username'] ?? '';
+    $password = $_POST['password'] ?? '';
+    $email = $_POST['email'] ?? '';
 
+    if (!empty($username) && !empty($password) && !empty($email)) {
+        $stmt = $conn->prepare("SELECT * FROM users WHERE username = ? OR email = ?");
+        $stmt->bind_param("ss", $username, $email);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result && $result->num_rows > 0) {
+            $error = 'Username or email already exists';
+        } else {
+            if (strlen($password) < 8) {
+                $error = 'Password must be at least 8 characters long';
+            } elseif ($password !== $_POST['confirm_password']) {
+                $error = 'Passwords do not match';
+            } else {
+                $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+                $created_at = date('Y-m-d H:i:s');
+                $insertStmt = $conn->prepare("INSERT INTO users (username, email, password, created_at) VALUES (?, ?, ?, ?)");
+                $insertStmt->bind_param("ssss", $username, $email, $hashedPassword, $created_at);
+                if ($insertStmt->execute()) {
+                    header("Location: login.php?message=Account created successfully. Please log in.");
+                    exit();
+                } else {
+                    $error = 'Error creating account. Please try again.';
+                }
+            }
+        }
+    } else {
+        $error = 'Please enter all required fields';
+    }
+}
+
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,27 +67,28 @@
             </div>
             <header class="header">Listahan</header>
             <header class="header1">Sign Up Here!</header>
-            <form action="register-process.php" method="post" id="registerForm">
+           
+            <form action="register.php" method="post" id="registerForm">
                 <div class="loading" id="loading">
                     <span class="spinner"></span>Verifying...
                 </div>
                 <div class="message" id="messageBox" aria-live="polite"></div>
                 <div class="field input">
                     <label for="Username">Username</label>
-                    <input type="text" name="Username" id="Username" required>
+                    <input type="text" name="username" id="Username" required>
                 </div>
                 
                 <div class="field input">
                     <label for="Email">Email Address</label>
-                    <input type="email" name="Email" id="Email" required>
+                    <input type="email" name="email" id="Email" required>
                 </div>
                 <div class="field input">
                     <label for="Password">Password</label>
-                    <input type="password" name="Password" id="Password" placeholder="Password must be at least 8 characters long" required>
+                    <input type="password" name="password" id="Password" placeholder="Password must be at least 8 characters long" required>
                 </div>
                 <div class="field input">
                     <label for="ConfirmPassword">Confirm Password</label>
-                    <input type="password" name="ConfirmPassword" id="ConfirmPassword" required>
+                    <input type="password" name="confirm_password" id="ConfirmPassword" required>
                 </div>
                 
 

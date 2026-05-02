@@ -1,4 +1,38 @@
+<?php
+session_start();
 
+require 'db.php';
+
+$error = '';
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = $_POST['username'] ?? '';
+    $password = $_POST['password'] ?? '';
+
+    if (!empty($username) && !empty($password)) {
+        $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
+        $stmt->bind_param("s", $username);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result && $user = $result->fetch_assoc()) {
+            # login does not work. password is hashed in the db. fix this
+            
+            if (password_verify($password, $user['password'])) {
+                $_SESSION['user_id'] = $user['user_id'];
+                $_SESSION['username'] = $user['username'];
+                header("Location: index.php");
+                exit();
+            } else {
+                $error = 'Invalid username or password';
+            }
+        } else {
+            $error = 'Account with that username does not exist';
+        }
+    } else {
+        $error = 'Please enter both username and password';
+    }
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -32,9 +66,9 @@
                 <span class="spinner"></span>Verifying...
             </div>
             <div class="message" id="messageBox" style="display: none;">
-                <?php if (!empty($message)): ?>
-                    <p class="<?php echo strpos($message, 'errormsg') !== false ? 'errormsg' : 'successmsg'; ?>">
-                        <?php echo strip_tags($message, '<div>'); ?>
+                <?php if (!empty($error)): ?>
+                    <p class="errormsg">
+                        <?php echo htmlspecialchars($error); ?>
                     </p>
                 <?php endif; ?>
             </div>
@@ -42,11 +76,11 @@
             <form action="" method="post" id="loginForm">
                 <div class="field input">
                     <label for="Username"><i class="fa fa-user" style="font-size:32px;"></i></label>
-                    <input type="text" name="Username" id="Username" placeholder="username" required>
+                    <input type="text" name="username" id="Username" placeholder="username" required>
                 </div>
                 <div class="field input">
                     <label for="Password"><i class="fa fa-unlock-alt" id="passwordIcon" style="font-size:32px;"></i></label>
-                    <input type="password" name="Password" id="Password" placeholder="password" required>
+                    <input type="password" name="password" id="Password" placeholder="password" required>
                 </div>
                 <div class="button">
                     <input type="submit" class="btn" name="Submit" value="Login">
