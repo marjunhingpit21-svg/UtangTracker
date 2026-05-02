@@ -43,6 +43,53 @@ html, body
     margin-bottom: -20px;
 }
 
+h1 
+{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    color: #ffffff;
+    margin-left: 50px;
+    padding-top: 165px;
+    padding-left: 25px;
+    padding-bottom: 1px;
+    font-size: 50px;
+}
+
+.tagline 
+{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    color: #ffffff;
+    margin-left: 50px;
+    margin-right: 25px;
+    padding-top: 5px;
+    padding-left: 25px;
+    padding-bottom: 1px;
+    font-size: 18px;
+}
+
+.contactinfo 
+{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    color: #ffffff;
+    font-size: 18px;
+    margin-left: 75px;
+    margin-right: 25px;
+    padding-top: 5px;
+    padding-bottom: 1px;
+}
+
+.divider 
+{
+    width: 90%;
+    height: 3px;
+    background-color: #ffffff;
+    margin-left: 50px;
+}
 
 .loginarea 
 {
@@ -155,12 +202,136 @@ label i
     margin-bottom: 5px; 
 }
 
+.field.input select#Gender 
+{
+    width: 100%; 
+    padding: 10px 12px; 
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 12px; 
+    color: #273545;
+    margin-bottom: 20px;
+    background-color: rgba(255, 165, 0, 0.10);
+    border: 2px solid #FB7806; 
+    border-radius: 20px; 
+    border-style: solid;
+    appearance: none; 
+    background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"><path fill="%23333" d="M7 10l5 5 5-5z"/></svg>'); /* Custom arrow */
+    background-repeat: no-repeat;
+    background-position: right 12px center; 
+    background-size: 12px; 
+    cursor: pointer; 
+}
+
+
+.field.input select#Gender:hover 
+{
+        box-shadow: 0 0 8px rgba(251, 120, 6, 0.8);
+    outline: none; 
+}
+
+.field.input select#Gender:focus 
+{
+    box-shadow: 0 0 8px rgba(251, 120, 6, 0.8);
+    outline: none;
+}
+
+
+.field.input select#Gender option[disabled] 
+{
+    color: #999; 
+}
+
+@media (max-width: 600px) 
+{
+    .field.input select#Gender {
+        font-size: 14px; 
+        padding: 8px 10px;
+    }
+}
+
+.field.input input[type="radio"]#TermsAgree 
+{
+    appearance: none; 
+    -webkit-appearance: none; 
+    width: 20px; 
+    height: 20px; 
+    border: 2px solid #ccc;
+    border-radius: 50%; 
+    background-color: #fff; 
+    margin-right: 10px; 
+    cursor: pointer; 
+    transition: border-color 0.3s, background-color 0.3s; 
+}
+
+
+.field.input input[type="radio"]#TermsAgree:hover 
+{
+    border-color: #FB7806; 
+}
+
+
+.field.input input[type="radio"]#TermsAgree:checked 
+{
+    border-color: #FB7806; 
+    background-color: #FB7806;
+    position: relative; 
+}
+
+
+.field.input input[type="radio"]#TermsAgree:checked::after
+{
+    content: ''; 
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 10px; 
+    height: 10px;
+    background-color: #fff; 
+    border-radius: 50%; 
+}
+
+/* --------------------------------------------------------------------------------------------------------Terms and Policy*/
+
+.field.input label[for="TermsAgree"] a.terms-link 
+{
+    font-size: 12px; 
+    color: #FB7806; 
+    text-decoration: none; 
+    transition: color 0.3s; 
+}
+
+.field.input label[for="TermsAgree"] a.terms-link:hover 
+{
+    text-decoration: underline;
+    color: #CA4410; 
+}
+
+
 #termsModal .modal-content button 
 {
     background: #CA4410; 
 }
 
 
+@media (max-width: 600px) 
+{
+    .field.input input[type="radio"]#TermsAgree {
+        width: 18px; 
+        height: 18px; 
+    }
+
+    .field.input input[type="radio"]#TermsAgree:checked::after {
+        width: 8px; 
+        height: 8px;
+    }
+
+    .field.input label[for="TermsAgree"],
+    .field.input label[for="Terms"],
+    .field.input label[for="TermsAgree"] a.terms-link {
+        font-size: 10px; 
+    }
+}
 
 .errormsg 
 {
