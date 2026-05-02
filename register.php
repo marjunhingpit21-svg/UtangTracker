@@ -72,7 +72,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="loading" id="loading">
                     <span class="spinner"></span>Verifying...
                 </div>
-                <div class="message" id="messageBox" aria-live="polite"></div>
+                <div class="message" id="messageBox" style="<?php echo !empty($error) ? 'display: block;' : 'display: none;'; ?>" aria-live="polite">
+                    <?php if (!empty($error)): ?>
+                        <p class="errormsg"><?php echo htmlspecialchars($error); ?></p>
+                    <?php endif; ?>
+                </div>
                 <div class="field input">
                     <input type="text" name="Username" id="Username" placeholder="Username" required>
                 </div>
