@@ -162,334 +162,45 @@ $users = $pdo->query("SELECT user_id, username FROM users ORDER BY username")->f
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="Css/index.css" rel="stylesheet">    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <title>Debt Tracker</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        h1 {
-            text-align: center;
-            color: white;
-            margin-bottom: 30px;
-            font-size: 2.5em;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
-        }
-        
-        .message {
-            padding: 15px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            text-align: center;
-            animation: slideDown 0.5s ease;
-        }
-        
-        @keyframes slideDown {
-            from {
-                transform: translateY(-100px);
-                opacity: 0;
-            }
-            to {
-                transform: translateY(0);
-                opacity: 1;
-            }
-        }
-        
-        .message.success {
-            background-color: #4CAF50;
-            color: white;
-        }
-        
-        .message.error {
-            background-color: #f44336;
-            color: white;
-        }
-        
-        .form-section {
-            background: white;
-            border-radius: 12px;
-            padding: 25px;
-            margin-bottom: 30px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        
-        .form-section h2 {
-            color: #667eea;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #667eea;
-            padding-bottom: 10px;
-        }
-        
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-        
-        .form-group label {
-            margin-bottom: 5px;
-            font-weight: bold;
-            color: #555;
-        }
-        
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-            transition: border-color 0.3s;
-        }
-        
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #667eea;
-        }
-        
-        button {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 12px 24px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-        
-        button:active {
-            transform: translateY(0);
-        }
-        
-        .debt-list {
-            background: white;
-            border-radius: 12px;
-            margin-bottom: 30px;
-            overflow: hidden;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
-        }
-        
-        .list-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        
-        .list-header h3 {
-            font-size: 1.3em;
-        }
-        
-        .list-header p {
-            margin-top: 5px;
-            font-size: 0.9em;
-            opacity: 0.9;
-        }
-        
-        .total-owed {
-            background: rgba(255,255,255,0.2);
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-weight: bold;
-        }
-        
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        
-        th, td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-        
-        th {
-            background-color: #f8f9fa;
-            font-weight: bold;
-            color: #555;
-        }
-        
-        tr:hover {
-            background-color: #f8f9fa;
-        }
-        
-        .status-badge {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.85em;
-            font-weight: bold;
-            display: inline-block;
-        }
-        
-        .status-paid {
-            background-color: #4CAF50;
-            color: white;
-        }
-        
-        .status-unpaid {
-            background-color: #f44336;
-            color: white;
-        }
-        
-        .action-buttons {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-        
-        .btn-small {
-            padding: 6px 12px;
-            font-size: 12px;
-        }
-        
-        .btn-delete {
-            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
-        }
-        
-        .add-item-form {
-            background: #f8f9fa;
-            padding: 20px;
-            margin-top: 20px;
-            border-top: 2px solid #eee;
-        }
-        
-        .add-item-form h4 {
-            margin-bottom: 15px;
-            color: #667eea;
-        }
-        
-        .inline-form {
-            display: inline;
-        }
-        
-        .no-data {
-            text-align: center;
-            padding: 40px;
-            color: #999;
-        }
-        
-        .debug-info {
-            background: #f8f9fa;
-            padding: 10px;
-            margin-bottom: 20px;
-            border-radius: 8px;
-            font-size: 12px;
-            color: #666;
-        }
-        
-        @media (max-width: 768px) {
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            table, thead, tbody, th, td, tr {
-                display: block;
-            }
-            
-            thead {
-                display: none;
-            }
-            
-            tr {
-                margin-bottom: 15px;
-                border: 1px solid #ddd;
-                border-radius: 8px;
-            }
-            
-            td {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 10px;
-                border-bottom: 1px solid #eee;
-            }
-            
-            td::before {
-                content: attr(data-label);
-                font-weight: bold;
-                width: 40%;
-            }
-        }
-    </style>
 </head>
 <body>
+    <!-- Header Navigation -->
+    <div class="navbar">
+        <div class="nav-container">
+            <div class="logo-area">
+                <div class="logo">
+                    <img src="img/OrangeLogo.png" alt="Listahan Logo">
+                </div>
+                <span class="app-title">Listahan</span>
+            </div>
+            <div class="nav-center">
+                <!-- <h1>Debt Tracker</h1> -->
+            </div>
+            <div class="nav-right">
+                <button class="btn-nav" onclick="openModal()">+ Create Debt List</button>
+                <div class="profile-icon" title="Profile">
+                    <i class="fas fa-user-circle"></i>
+                </div>
+                <button class="btn-nav2 btn-logout" onclick="logout()"><i class="fas fa-sign-out"></i></button>
+            </div>
+        </div>
+    </div>
+    
     <div class="container">
-        <h1>💰 Debt Tracker</h1>
-        
         <?php if ($message): ?>
             <div class="message <?php echo $messageType; ?>">
                 <?php echo htmlspecialchars($message); ?>
             </div>
         <?php endif; ?>
         
-        <!-- Add New Debt List Form -->
-        <div class="form-section">
-            <h2>📋 Create New Debt List</h2>
-            <form method="POST" action="">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>User (optional)</label>
-                        <select name="user_id">
-                            <option value="">No User (Guest)</option>
-                            <?php foreach ($users as $user): ?>
-                                <option value="<?php echo $user['user_id']; ?>">
-                                    <?php echo htmlspecialchars($user['username']); ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>List Title *</label>
-                        <input type="text" name="title" required placeholder="e.g., Personal Loans">
-                    </div>
-                    <div class="form-group">
-                        <label>Creditor *</label>
-                        <input type="text" name="creditor" required placeholder="e.g., John Doe">
-                    </div>
-                </div>
-                <button type="submit" name="add_list">Create Debt List</button>
-            </form>
-        </div>
-        
         <!-- Display All Debt Lists -->
         <?php if (empty($debt_lists)): ?>
             <div class="debt-list">
                 <div class="no-data">
-                    <p>No debt lists yet. Create your first debt list above! 📝</p>
+                    <p>No debt lists yet. Click "Create Debt List" to get started!</p>
                 </div>
             </div>
         <?php else: ?>
@@ -497,9 +208,8 @@ $users = $pdo->query("SELECT user_id, username FROM users ORDER BY username")->f
                 <div class="debt-list">
                     <div class="list-header">
                         <div>
-                            <h3>📌 <?php echo htmlspecialchars($list['title']); ?></h3>
+                            <h3><?php echo htmlspecialchars($list['title']); ?></h3>
                             <p>Creditor: <?php echo htmlspecialchars($list['creditor']); ?> | Created: <?php echo date('M d, Y', strtotime($list['created_at'])); ?></p>
-                            <p><small>List ID: <?php echo $list['list_id']; ?></small></p>
                         </div>
                         <div style="display: flex; gap: 10px; align-items: center;">
                             <div class="total-owed">
@@ -507,7 +217,7 @@ $users = $pdo->query("SELECT user_id, username FROM users ORDER BY username")->f
                             </div>
                             <form method="POST" action="" class="inline-form" onsubmit="return confirm('Delete this entire debt list? This will also delete all items in it.');">
                                 <input type="hidden" name="list_id" value="<?php echo $list['list_id']; ?>">
-                                <button type="submit" name="delete_list" class="btn-small btn-delete">Delete List</button>
+                                <button type="submit" name="delete_list" class="btn-small btn-delete"><i class="fas fa-trash"></i></button>
                             </form>
                         </div>
                     </div>
@@ -554,7 +264,7 @@ $users = $pdo->query("SELECT user_id, username FROM users ORDER BY username")->f
                                                 
                                                 <form method="POST" action="" class="inline-form" onsubmit="return confirm('Delete this debt item?');">
                                                     <input type="hidden" name="content_id" value="<?php echo $item['content_id']; ?>">
-                                                    <button type="submit" name="delete_debt" class="btn-small btn-delete">Delete</button>
+                                                    <button type="submit" name="delete_debt" class="btn-small btn-delete2"><i class="fas fa-trash"></i></button>
                                                 </form>
                                             </div>
                                         </td>
@@ -570,7 +280,7 @@ $users = $pdo->query("SELECT user_id, username FROM users ORDER BY username")->f
                     
                     <!-- Add Item to List Form -->
                     <div class="add-item-form">
-                        <h4>➕ Add Debt Item to "<?php echo htmlspecialchars($list['title']); ?>"</h4>
+                        <h4>Add Debt Item to "<?php echo htmlspecialchars($list['title']); ?>"</h4>
                         <form method="POST" action="">
                             <input type="hidden" name="list_id" value="<?php echo $list['list_id']; ?>">
                             <div class="form-grid">
@@ -605,5 +315,77 @@ $users = $pdo->query("SELECT user_id, username FROM users ORDER BY username")->f
             <?php endforeach; ?>
         <?php endif; ?>
     </div>
+    
+    <!-- Modal for Create Debt List -->
+    <div id="debtListModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Create New Debt List</h2>
+                <span class="close" onclick="closeModal()">&times;</span>
+            </div>
+            <form method="POST" action="" id="createListForm">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>User (optional)</label>
+                        <select name="user_id">
+                            <option value="">No User (Guest)</option>
+                            <?php foreach ($users as $user): ?>
+                                <option value="<?php echo $user['user_id']; ?>">
+                                    <?php echo htmlspecialchars($user['username']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>List Title *</label>
+                        <input type="text" name="title" required placeholder="e.g., Personal Loans">
+                    </div>
+                    <div class="form-group">
+                        <label>Creditor *</label>
+                        <input type="text" name="creditor" required placeholder="e.g., John Doe">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                    <button type="submit" name="add_list">Create List</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // Modal functions
+        function openModal() {
+            document.getElementById('debtListModal').style.display = 'block';
+        }
+        
+        function closeModal() {
+            document.getElementById('debtListModal').style.display = 'none';
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('debtListModal');
+            if (event.target == modal) {
+                closeModal();
+            }
+        }
+        
+        // Logout function (to be implemented later)
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                // Add your logout logic here later
+                window.location.href = 'index.php';
+            }
+        }
+        
+        // Auto-hide message after 3 seconds
+        setTimeout(function() {
+            const message = document.querySelector('.message');
+            if (message) {
+                message.style.display = 'none';
+            }
+        }, 3000);
+    </script>
 </body>
 </html>
