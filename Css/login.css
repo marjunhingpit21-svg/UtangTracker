@@ -116,11 +116,11 @@ label i {
 
 .field input {
     width: 325px;
-    height: 25px;
-    background-color: rgba(255, 165, 0, 0.10);
+    height: 35px;
     margin-bottom: 25px;
+    margin-top:15px;
     padding-left: 10px;
-    border-radius: 20px;
+    border-radius: 10px;
     border-style: solid;
     border-color: #FB7806;
     color: #273545;

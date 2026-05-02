@@ -41,11 +41,9 @@
             
             <form action="" method="post" id="loginForm">
                 <div class="field input">
-                    <label for="Username"><i class="fa fa-user" style="font-size:32px;"></i></label>
                     <input type="text" name="Username" id="Username" placeholder="username" required>
                 </div>
                 <div class="field input">
-                    <label for="Password"><i class="fa fa-unlock-alt" id="passwordIcon" style="font-size:32px;"></i></label>
                     <input type="password" name="Password" id="Password" placeholder="password" required>
                 </div>
                 <div class="button">
