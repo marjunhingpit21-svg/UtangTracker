@@ -1,26 +1,24 @@
-.parent 
-{
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(5, 1fr);
-    gap: 8px;
-    height: 100vh;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-}
-
-html, body 
-{
+/* ===== BASE RESET ===== */
+html, body {
     margin: 0;
     padding: 0;
     height: 100%;
-    overflow: hidden;
 }
 
+/* ===== MAIN LAYOUT ===== */
+.parent {
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    grid-template-rows: 1fr;
+    min-height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+/* ===== LEFT PANEL ===== */
 .description {
-    grid-area: 1 / 1 / 6 / 4;
+    grid-area: 1 / 1 / 2 / 2;
     background-color: #fa6909;
     background-image: url('../Img/loginpage.jpg');
     background-size: cover;
@@ -28,6 +26,7 @@ html, body
     background-repeat: no-repeat;
     filter: brightness(1.1);
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    min-height: 100vh;
 }
 
 .logo-container {
@@ -36,15 +35,14 @@ html, body
 }
 
 .logo {
-    width: 200px;
-    height: 200px;
+    width: 160px;
+    height: 160px;
     object-fit: contain;
-    margin-top: 30px;
-    margin-bottom: -20px;
+    margin-top: 20px;
+    margin-bottom: -10px;
 }
 
-h1 
-{
+h1 {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -56,8 +54,7 @@ h1
     font-size: 50px;
 }
 
-.tagline 
-{
+.tagline {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -70,8 +67,7 @@ h1
     font-size: 18px;
 }
 
-.contactinfo 
-{
+.contactinfo {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -83,54 +79,61 @@ h1
     padding-bottom: 1px;
 }
 
-.divider 
-{
+.divider {
     width: 90%;
     height: 3px;
     background-color: #ffffff;
     margin-left: 50px;
 }
 
-.loginarea 
-{
-    grid-area: 1 / 4 / 6 / 6;
+/* ===== RIGHT PANEL (LOGIN/REGISTER AREA) ===== */
+.loginarea {
+    grid-area: 1 / 2 / 2 / 3;
+    display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-items: center;
-    margin-top: 20px;
-    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    justify-content: center;
+    padding: 20px 30px;
+    overflow-y: auto;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    box-sizing: border-box;
 }
 
-.header 
-{
-    font-size: 70px;
+.header {
+    font-size: clamp(40px, 6vw, 70px);
     color: #fa6909;
     font-weight: 600;
     text-align: center;
     margin-top: -3px;
+    margin-bottom: 0;
 }
 
-.header1 
-{
-    font-size: 20px;
+.header1 {
+    font-size: clamp(14px, 2vw, 20px);
     color: #fa6909;
     font-weight: 600;
     text-align: center;
     margin-top: 5px;
 }
 
-label i 
-{
+/* ===== FORM FIELDS ===== */
+label i {
     margin-right: 8px;
     margin-bottom: 8px;
     color: #FB7806;
 }
 
-.field input 
-{
-    width: 325px;
+.field {
+    width: 100%;
+    max-width: 340px;
+}
+
+.field input {
+    width: 100%;
+    max-width: 325px;
     height: 35px;
-    margin-top:15px;
-    margin-bottom: 15px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     padding-left: 10px;
     border-radius: 10px;
     border-style: solid;
@@ -138,23 +141,21 @@ label i
     color: #273545;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 12px;
+    box-sizing: border-box;
 }
 
-.field input:hover
-{
-    box-shadow: 0 0 8px rgba(251, 120, 6, 0.8);
-    outline: none;
-
-}
-
-.field input:focus 
-{
+.field input:hover {
     box-shadow: 0 0 8px rgba(251, 120, 6, 0.8);
     outline: none;
 }
 
-.button, .btn 
-{
+.field input:focus {
+    box-shadow: 0 0 8px rgba(251, 120, 6, 0.8);
+    outline: none;
+}
+
+/* ===== BUTTONS ===== */
+.button, .btn {
     justify-self: center;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 18px;
@@ -165,11 +166,10 @@ label i
     border-radius: 25px;
     border: none;
     background: #FB7806;
-    
+    cursor: pointer;
 }
 
-.button:hover, .btn:hover 
-{
+.button:hover, .btn:hover {
     color: #FB7806;
     border: 2px solid #FB7806;
     background: #ffffff;
@@ -177,8 +177,8 @@ label i
     transition: transform 0.2s ease-in-out;
 }
 
-.registrationlink, .loginlink 
-{
+/* ===== LINKS ===== */
+.registrationlink, .loginlink {
     text-align: center;
     margin-top: 10px;
 }
@@ -188,114 +188,73 @@ label i
     text-decoration: none;
 }
 
-.registrationl a:hover 
-{
+.registrationl a:hover {
     text-decoration: underline;
 }
 
-.field.input label
-{
+/* ===== LABEL STYLES ===== */
+.field.input label {
     display: block;
-    font-size: 16px; 
-    font-weight: 500; 
+    font-size: 16px;
+    font-weight: 500;
     color: #FB7806;
-    margin-bottom: 5px; 
+    margin-bottom: 5px;
 }
 
-@media (max-width: 600px) 
-{
-    .field.input select#Gender {
-        font-size: 14px; 
-        padding: 8px 10px;
-    }
-}
-
-.field.input input[type="radio"]#TermsAgree 
-{
-    appearance: none; 
-    -webkit-appearance: none; 
-    width: 20px; 
-    height: 20px; 
+/* ===== TERMS & POLICY ===== */
+.field.input input[type="radio"]#TermsAgree {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 20px;
+    height: 20px;
     border: 2px solid #ccc;
-    border-radius: 50%; 
-    background-color: #fff; 
-    margin-right: 10px; 
-    cursor: pointer; 
-    transition: border-color 0.3s, background-color 0.3s; 
+    border-radius: 50%;
+    background-color: #fff;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: border-color 0.3s, background-color 0.3s;
 }
 
-
-.field.input input[type="radio"]#TermsAgree:hover 
-{
-    border-color: #FB7806; 
+.field.input input[type="radio"]#TermsAgree:hover {
+    border-color: #FB7806;
 }
 
-
-.field.input input[type="radio"]#TermsAgree:checked 
-{
-    border-color: #FB7806; 
+.field.input input[type="radio"]#TermsAgree:checked {
+    border-color: #FB7806;
     background-color: #FB7806;
-    position: relative; 
+    position: relative;
 }
 
-
-.field.input input[type="radio"]#TermsAgree:checked::after
-{
-    content: ''; 
+.field.input input[type="radio"]#TermsAgree:checked::after {
+    content: '';
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 10px; 
+    width: 10px;
     height: 10px;
-    background-color: #fff; 
-    border-radius: 50%; 
+    background-color: #fff;
+    border-radius: 50%;
 }
 
-/* --------------------------------------------------------------------------------------------------------Terms and Policy*/
-
-.field.input label[for="TermsAgree"] a.terms-link 
-{
-    font-size: 12px; 
-    color: #FB7806; 
-    text-decoration: none; 
-    transition: color 0.3s; 
+.field.input label[for="TermsAgree"] a.terms-link {
+    font-size: 12px;
+    color: #FB7806;
+    text-decoration: none;
+    transition: color 0.3s;
 }
 
-.field.input label[for="TermsAgree"] a.terms-link:hover 
-{
+.field.input label[for="TermsAgree"] a.terms-link:hover {
     text-decoration: underline;
-    color: #CA4410; 
+    color: #CA4410;
 }
 
-
-#termsModal .modal-content button 
-{
-    background: #CA4410; 
+#termsModal .modal-content button {
+    background: #CA4410;
 }
 
-
-@media (max-width: 600px) 
-{
-    .field.input input[type="radio"]#TermsAgree {
-        width: 18px; 
-        height: 18px; 
-    }
-
-    .field.input input[type="radio"]#TermsAgree:checked::after {
-        width: 8px; 
-        height: 8px;
-    }
-
-    .field.input label[for="TermsAgree"],
-    .field.input label[for="Terms"],
-    .field.input label[for="TermsAgree"] a.terms-link {
-        font-size: 10px; 
-    }
-}
-
-.errormsg 
-{
+/* ===== MESSAGES ===== */
+.errormsg {
     justify-self: center;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 14px;
@@ -308,8 +267,7 @@ label i
     margin-top: 15px;
 }
 
-.successmsg 
-{
+.successmsg {
     justify-self: center;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 14px;
@@ -322,30 +280,8 @@ label i
     margin-top: 15px;
 }
 
-.loading 
-{
-    justify-self: center;
-    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    font-size: 14px;
-    font-weight: bold;
-    color: #FB7806;
-    text-align: center;
-    margin-top: 15px;
-    display: none;
-    animation: pulse 1.5s infinite;
-}
-
-@keyframes pulse 
-{
-    0% { opacity: 1; }
-    50% { opacity: 0.5; }
-    100% { opacity: 1; }
-}
-
-/*-------------------------------------------------------------------------------------------Loading Animation*/
-
-.loading 
-{
+/* ===== LOADING ANIMATION ===== */
+.loading {
     display: none;
     text-align: center;
     padding: 10px;
@@ -357,38 +293,116 @@ label i
     font-size: 18px;
     color: #FB7806;
     width: fit-content;
+    animation: pulse 1.5s infinite;
 }
-.spinner 
-{
-    border: 2px solid #f3f3f3; 
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.spinner {
+    border: 2px solid #f3f3f3;
     border-top: 2px solid #FB7806;
     border-radius: 50%;
     width: 18px;
     height: 18px;
     animation: spin 1s linear infinite;
     display: inline-block;
-    margin-right: 6px; 
+    margin-right: 6px;
     vertical-align: middle;
 }
-@keyframes spin 
-{
+
+@keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
 }
 
-/*------------------------------------------------------------------------------------------Validation Hints*/
-.invalid-email, .invalid-password, .invalid-confirm-password, .invalid-username 
-{
+/* ===== VALIDATION ===== */
+.invalid-email, .invalid-password, .invalid-confirm-password, .invalid-username {
     border: 2px solid red !important;
     box-shadow: 0 0 5px red !important;
     background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="red" class="bi bi-x-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M4.646 4.646a.5.5 0 0 1 .708 0L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 0 1 0-.708z"/></svg>') no-repeat right 10px center;
     background-size: 16px;
 }
 
-.valid-email, .valid-password, .valid-confirm-password, .valid-username 
-{
+.valid-email, .valid-password, .valid-confirm-password, .valid-username {
     border: 2px solid green !important;
     box-shadow: 0 0 5px green !important;
     background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="green" class="bi bi-check-circle" viewBox="0 0 16 16"><path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/><path d="M10.97 4.97a.235.235 0 0 0-.02.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-1.071-1.05z"/></svg>') no-repeat right 10px center;
     background-size: 16px;
+}
+
+/* ===== RESPONSIVE: MEDIUM SCREENS ===== */
+@media (max-width: 900px) {
+    .parent {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .logo {
+        width: 120px;
+        height: 120px;
+    }
+}
+
+/* ===== RESPONSIVE: SMALL SCREENS (tablet/mobile) ===== */
+@media (max-width: 680px) {
+    body {
+        overflow-y: auto;
+    }
+
+    .parent {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    .description {
+        min-height: 200px;
+        height: 220px;
+        background-position: center;
+    }
+
+    .loginarea {
+        padding: 20px 20px 40px;
+        justify-content: flex-start;
+    }
+
+    .logo {
+        width: 100px;
+        height: 100px;
+        margin-top: 15px;
+    }
+
+    .field input {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .field {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .field.input input[type="radio"]#TermsAgree {
+        width: 18px;
+        height: 18px;
+    }
+
+    .field.input input[type="radio"]#TermsAgree:checked::after {
+        width: 8px;
+        height: 8px;
+    }
+
+    .field.input label[for="TermsAgree"],
+    .field.input label[for="Terms"],
+    .field.input label[for="TermsAgree"] a.terms-link {
+        font-size: 10px;
+    }
+
+    .field.input select#Gender {
+        font-size: 14px;
+        padding: 8px 10px;
+    }
 }

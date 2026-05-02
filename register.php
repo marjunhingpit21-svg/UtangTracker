@@ -72,9 +72,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="loading" id="loading">
                     <span class="spinner"></span>Verifying...
                 </div>
-                <div class="message" id="messageBox" aria-live="polite"></div>
+                <div class="message" id="messageBox" style="<?php echo !empty($error) ? 'display: block;' : 'display: none;'; ?>" aria-live="polite">
+                    <?php if (!empty($error)): ?>
+                        <p class="errormsg"><?php echo htmlspecialchars($error); ?></p>
+                    <?php endif; ?>
+                </div>
                 <div class="field input">
-<<<<<<< HEAD
                     <label for="Username">Username</label>
                     <input type="text" name="username" id="Username" required>
                 </div>
@@ -116,19 +119,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         </p>
                         <button onclick="closeTermsModal()" style="padding:10px; background: linear-gradient(90deg, rgba(202, 68, 16, 1) 36%, rgba(251, 120, 6, 1) 71%); color:white; border:none; border-radius:5px; cursor:pointer;">Close</button>
                     </div>
-=======
-                    <input type="text" name="Username" id="Username" placeholder="Username" required>
-                </div>
-                
-                <div class="field input">
-                    <input type="email" name="Email" id="Email" placeholder="Email Address" required>
-                </div>
-                <div class="field input">
-                    <input type="password" name="Password" id="Password" placeholder="Password" required>
-                </div>
-                <div class="field input">
-                    <input type="password" name="ConfirmPassword" id="ConfirmPassword" placeholder="Confirm Password" required>
->>>>>>> 77603d5195662a614bef1c27f5f5936dd215f9f9
                 </div>
 
                 <div class="button">

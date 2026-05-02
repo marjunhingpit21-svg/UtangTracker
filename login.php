@@ -65,7 +65,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             <div class="loading" id="loading">
                 <span class="spinner"></span>Verifying...
             </div>
-            <div class="message" id="messageBox" style="display: none;">
+            <div class="message" id="messageBox" style="<?php echo !empty($error) ? 'display: block;' : 'display: none;'; ?>">
                 <?php if (!empty($error)): ?>
                     <p class="errormsg">
                         <?php echo htmlspecialchars($error); ?>
