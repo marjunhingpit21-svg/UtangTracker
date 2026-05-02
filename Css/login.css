@@ -1,0 +1,188 @@
+.parent {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-template-rows: repeat(5, 1fr);
+    gap: 8px;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+}
+
+.description {
+    grid-area: 1 / 1 / 6 / 4;
+    background-color: #fa6909;
+    background-image: url('../Img/loginpage.jpg');
+    background-size: cover;
+    background-position: 127px center;
+    background-repeat: no-repeat;
+    filter: brightness(1.1);
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+
+.loginarea {
+    grid-area: 1 / 4 / 6 / 6;
+    align-items: center;
+    justify-items: center;
+    margin-top: 200px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    
+}
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.logo {
+    width: 200px;
+    height: 200px;
+    object-fit: contain;
+    margin-top: -120px;
+    margin-bottom: -20px;
+}
+
+.header {
+    font-size: 70px;
+    color: #fa6909;
+    font-weight: 600;
+    text-align: center;
+}
+
+.header1 {
+    font-size: 20px;
+    color: #fa6909;
+    font-weight: 600;
+    text-align: center;
+}
+
+label i {
+    margin-right: 8px;
+    margin-bottom: 8px;
+    color: #FB7806;
+}
+
+.field input {
+    width: 325px;
+    height: 25px;
+    background-color: rgba(255, 165, 0, 0.10);
+    margin-bottom: 25px;
+    padding-left: 10px;
+    border-radius: 20px;
+    border-style: solid;
+    border-color: #FB7806;
+    color: #273545;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 12px;
+}
+
+.field input:hover {
+    box-shadow: 0 0 8px rgba(251, 120, 6, 0.8);
+    outline: none;
+}
+
+.field input:focus {
+    box-shadow: 0 0 8px rgba(251, 120, 6, 0.8);
+    outline: none;
+}
+
+.button, .btn {
+    justify-self: center;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    color: #ffffff;
+    width: 105px;
+    height: 35px;
+    border-radius: 25px;
+    border: none;
+    background: #FB7806;
+}
+
+.button:hover, .btn:hover {
+    color: #FB7806;
+    border: 2px solid #FB7806;
+    background: #ffffff;
+    transform: scale(1.1);
+    transition: transform 0.2s ease-in-out;
+}
+
+.registrationlink, .loginlink {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.registrationl a {
+    color: #FB7806;
+    text-decoration: none;
+}
+
+.registrationl a:hover {
+    text-decoration: underline;
+}
+
+.errormsg {
+    justify-self: center;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    color: red;
+    text-align: center;
+    background: rgba(255, 0, 0, 0.1);
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 15px;
+}
+
+.successmsg {
+    justify-self: center;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 12px;
+    font-weight: bold;
+    color: green;
+    text-align: center;
+    background: rgba(0, 255, 0, 0.1);
+    padding: 10px;
+    border-radius: 10px;
+    margin-top: 15px;
+}
+
+.loading {
+    display: none;
+    text-align: center;
+    padding: 10px;
+    background-color: rgba(251, 120, 6, 0.1);
+    border: 2px solid #FB7806;
+    border-radius: 10px;
+    margin: 10px auto;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 18px;
+    color: #FB7806;
+    width: fit-content;
+}
+
+.spinner {
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #FB7806;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+    margin-right: 6px;
+    vertical-align: middle;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
