@@ -91,78 +91,32 @@ $name_stmt->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="Css/index.css" rel="stylesheet">    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <title>Debt Tracker</title>
     <link href="Css/index.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
-    <!-- Header Navigation -->
-    <div class="navbar">
-        <div class="nav-container">
-            <div class="logo-area">
-                <div class="logo">
-                    <img src="img/OrangeLogo.png" alt="Listahan Logo">
-                </div>
-                <span class="app-title">Listahan</span>
-            </div>
-            <div class="nav-center">
-                <!-- <h1>Debt Tracker</h1> -->
-            </div>
-            <div class="nav-right">
-                <button class="btn-nav" onclick="openModal()">+ Create Debt List</button>
-                <div class="profile-icon" title="Profile">
-                    <i class="fas fa-user-circle"></i>
-                </div>
-                <button class="btn-nav2 btn-logout" onclick="logout()"><i class="fas fa-sign-out"></i></button>
-            </div>
-        </div>
-    </div>
-    
     <div class="container">
-        <h1>💰 Debt Tracker</h1>
+        <h1><?php echo isset($name) ? htmlspecialchars($name) . "'s Listahan" : "My Listahan"; ?></h1>
         
-        <?php if ($message): ?>
-            <div class="message <?php echo $messageType; ?>">
-                <?php echo htmlspecialchars($message); ?>
+        <div class="nav-header">
+            <div class="nav-links">
+                <a href="index.php"><i class="fa fa-home xl"></i></a>
+                <a href="profile.php"><i class="fa fa-user"></i></a>
+                <a href="logout.php"><i class="fa fa-sign-out"></i></a>
             </div>
-        <?php endif; ?>
-        
-        <!-- Add New Debt List Form -->
-        <div class="form-section">
-            <h2>📋 Create New Debt List</h2>
-            <form method="POST" action="">
-                <div class="form-grid">
-                    <div class="form-group">
-                        <label>User (optional)</label>
-                        <select name="user_id">
-                            <option value="">No User (Guest)</option>
-                            <?php foreach ($users as $user): ?>
-                                <option value="<?php echo $user['user_id']; ?>">
-                                    <?php echo htmlspecialchars($user['username']); ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>List Title *</label>
-                        <input type="text" name="title" required placeholder="e.g., Personal Loans">
-                    </div>
-                    <div class="form-group">
-                        <label>Creditor *</label>
-                        <input type="text" name="creditor" required placeholder="e.g., John Doe">
-                    </div>
-                </div>
-                <button type="submit" name="add_list">Create Debt List</button>
-            </form>
+
+            <button class="add-list">
+                    <a href="new_list.php"><i class="fa fa-plus"></i></a>
+            </button>
         </div>
+
         
         <!-- Display All Debt Lists -->
         <?php if (empty($debt_lists)): ?>
             <div class="debt-list">
                 <div class="no-data">
-                    <p>No debt lists yet. Create your first debt list above! 📝</p>
+                    <p>No debt lists yet. Create a debt list first.</p>
                 </div>
             </div>
         <?php else: ?>
@@ -179,7 +133,7 @@ $name_stmt->close();
                             </div>
                             <form method="POST" action="" class="inline-form" onsubmit="return confirm('Delete this entire debt list? This will also delete all items in it.');">
                                 <input type="hidden" name="list_id" value="<?php echo $list['list_id']; ?>">
-                                <button type="submit" name="delete_list" class="btn-small btn-delete"><i class="fas fa-trash"></i></button>
+                                <button type="submit" name="delete_list" class="btn-small btn-delete">Delete List</button>
                             </form>
                         </div>
                     </div>
@@ -226,7 +180,7 @@ $name_stmt->close();
                                                 
                                                 <form method="POST" action="" class="inline-form" onsubmit="return confirm('Delete this debt item?');">
                                                     <input type="hidden" name="content_id" value="<?php echo $item['content_id']; ?>">
-                                                    <button type="submit" name="delete_debt" class="btn-small btn-delete2"><i class="fas fa-trash"></i></button>
+                                                    <button type="submit" name="delete_debt" class="btn-small btn-delete">Delete</button>
                                                 </form>
                                             </div>
                                         </td>
@@ -240,114 +194,9 @@ $name_stmt->close();
                         </div>
                     <?php endif; ?>
                     
-                    <!-- Add Item to List Form -->
-                    <div class="add-item-form">
-                        <h4>➕ Add Debt Item to "<?php echo htmlspecialchars($list['title']); ?>"</h4>
-                        <form method="POST" action="">
-                            <input type="hidden" name="list_id" value="<?php echo $list['list_id']; ?>">
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label>Debt Name *</label>
-                                    <input type="text" name="content_name" required placeholder="e.g., iPhone Loan">
-                                </div>
-                                <div class="form-group">
-                                    <label>Additional Info</label>
-                                    <textarea name="additional_info" rows="2" placeholder="Any notes..."></textarea>
-                                </div>
-                                <div class="form-group">
-                                    <label>Amount Owed *</label>
-                                    <input type="number" step="0.01" name="money_owed" required placeholder="0.00">
-                                </div>
-                                <div class="form-group">
-                                    <label>Deadline</label>
-                                    <input type="datetime-local" name="deadline">
-                                </div>
-                                <div class="form-group">
-                                    <label>Status *</label>
-                                    <select name="debt_status" required>
-                                        <option value="unpaid">Unpaid</option>
-                                        <option value="paid">Paid</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <button type="submit" name="add_debt">Add Debt Item</button>
-                        </form>
-                    </div>
                 </div>
             <?php endforeach; ?>
         <?php endif; ?>
     </div>
-    
-    <!-- Modal for Create Debt List -->
-    <div id="debtListModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>Create New Debt List</h2>
-                <span class="close" onclick="closeModal()">&times;</span>
-            </div>
-            <form method="POST" action="" id="createListForm">
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label>User (optional)</label>
-                        <select name="user_id">
-                            <option value="">No User (Guest)</option>
-                            <?php foreach ($users as $user): ?>
-                                <option value="<?php echo $user['user_id']; ?>">
-                                    <?php echo htmlspecialchars($user['username']); ?>
-                                </option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>List Title *</label>
-                        <input type="text" name="title" required placeholder="e.g., Personal Loans">
-                    </div>
-                    <div class="form-group">
-                        <label>Creditor *</label>
-                        <input type="text" name="creditor" required placeholder="e.g., John Doe">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
-                    <button type="submit" name="add_list">Create List</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    
-    <script>
-        // Modal functions
-        function openModal() {
-            document.getElementById('debtListModal').style.display = 'block';
-        }
-        
-        function closeModal() {
-            document.getElementById('debtListModal').style.display = 'none';
-        }
-        
-        // Close modal when clicking outside
-        window.onclick = function(event) {
-            const modal = document.getElementById('debtListModal');
-            if (event.target == modal) {
-                closeModal();
-            }
-        }
-        
-        // Logout function (to be implemented later)
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                // Add your logout logic here later
-                window.location.href = 'index.php';
-            }
-        }
-        
-        // Auto-hide message after 3 seconds
-        setTimeout(function() {
-            const message = document.querySelector('.message');
-            if (message) {
-                message.style.display = 'none';
-            }
-        }, 3000);
-    </script>
 </body>
 </html>
