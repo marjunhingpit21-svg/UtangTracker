@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="loginarea">
             <div class="logo-container">
-                <img src="Img/OrangeLogo.png" alt="Listahan Logo" class="logo">
+                <img src="img/OrangeLogo.png" alt="Listahan Logo" class="logo">
             </div>
             <header class="header">Listahan</header>
             <header class="header1">Login Here!</header>

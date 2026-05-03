@@ -94,8 +94,8 @@ $name_stmt->close();
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <div class="sidebar-logo">
-                <div class="sidebar-logo-icon">₱</div>
-                <span class="sidebar-logo-text">Listahan</span>
+                <img src="img/circular-logo.png" alt="Listahan Logo" class="logo">
+                <span class="logo-text">Listahan</span>
             </div>
             <button class="sidebar-toggle-btn sidebar-toggle" title="Collapse sidebar">
                 <i class="fa fa-chevron-left" style="color: var(--color-text-placeholder); padding:0; font-size:0.85rem;"></i>
@@ -104,6 +104,12 @@ $name_stmt->close();
 
         <div class="sidebar-content">
             <ul class="menu-list">
+                <li class="menu-items">
+                    <form action="#" class="search-form">
+                        <span class="material-symbols-outlined">search</span>
+                        <input type="search" name="query" placeholder="Search list..." required>
+                    </form>
+                </li>
                 <li class="menu-items">
                     <a href="index.php" class="menu-link active">
                         <i class="fa fa-home"></i>
@@ -130,10 +136,6 @@ $name_stmt->close();
                 </li>
             </ul>
         </div>
-
-        <div class="sidebar-footer">
-            <!-- space for future widgets -->
-        </div>
     </aside>
 
     <!-- Main Content -->
@@ -153,6 +155,26 @@ $name_stmt->close();
                     <span class="material-symbols-outlined">calendar_today</span>
                     <span><?php echo date('l, F j, Y'); ?></span>
                 </div>
+            </div>
+        </div>
+
+        <div class="filters">
+            <div class="task-filters">
+                <button class="filter-btn active" data-filter="all">
+                    <span class="material-symbols-outlined">view_list</span>
+                    All Lists
+                    <span class="filter-count">0</span>
+                </button>
+                <button class="filter-btn" data-filter="completed">
+                    <span class="material-symbols-outlined">task_alt</span>
+                    Completed
+                    <span class="filter-count">0</span>
+                </button>
+                <button class="filter-btn" data-filter="pending">
+                    <span class="material-symbols-outlined">pending_actions</span>
+                    Pending
+                    <span class="filter-count">0</span>
+                </button>
             </div>
         </div>
 
@@ -194,27 +216,6 @@ $name_stmt->close();
         <?php endif; ?>
     </div>
 
-    <script>
-        // Sidebar collapse / expand
-        const sidebar = document.getElementById('sidebar');
-        const overlay = document.getElementById('sidebarOverlay');
-
-        document.querySelectorAll('.sidebar-toggle').forEach(btn => {
-            btn.addEventListener('click', () => {
-                const isMobile = window.innerWidth <= 1024;
-                if (isMobile) {
-                    sidebar.classList.toggle('mobile-active');
-                    overlay.classList.toggle('active');
-                } else {
-                    sidebar.classList.toggle('collapsed');
-                }
-            });
-        });
-
-        overlay.addEventListener('click', () => {
-            sidebar.classList.remove('mobile-active');
-            overlay.classList.remove('active');
-        });
-    </script>
+    <script src="js/index.js"></script>
 </body>
 </html>
