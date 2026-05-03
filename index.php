@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-// Handle POST requests
+
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['update_status'])) {
         $content_id = $_POST['content_id'];
@@ -55,6 +55,20 @@ while ($row = $result->fetch_assoc()) {
 }
 $stmt->close();
 
+$item_query = "SELECT lc.content_id, lc.list_id, lc.content_name, lc.money_owed, lc.deadline, lc.debt_status " .
+              "FROM list_content lc " .
+              "JOIN debt_list dl ON lc.list_id = dl.list_id " .
+              "WHERE dl.user_id = ? " .
+              "ORDER BY lc.list_id, lc.content_id";
+$item_stmt = $conn->prepare($item_query);
+$item_stmt->bind_param("i", $user_id);
+$item_stmt->execute();
+$item_result = $item_stmt->get_result();
+$list_items = [];
+while ($row = $item_result->fetch_assoc()) {
+    $list_items[$row['list_id']][] = $row;
+}
+$item_stmt->close();
 
 // Get username
 $name_query = "SELECT username FROM users WHERE user_id = ?";
@@ -187,7 +201,7 @@ $name_stmt->close();
             </div>
         <?php else: ?>
             <?php foreach ($debt_lists as $list): ?>
-                <div class="debt-list">
+                <div class="debt-list" data-list-id="<?php echo $list['list_id']; ?>">
                     <div class="list-header">
                         <div>
                             <h3><?php echo htmlspecialchars($list['title']); ?></h3>
@@ -206,7 +220,6 @@ $name_stmt->close();
                                 <input type="hidden" name="list_id" value="<?php echo $list['list_id']; ?>">
                                 <button type="submit" name="delete_list" class="btn-small btn-delete">
                                     <i class="fa fa-trash" style="padding:0; color:white; font-size:0.75rem;"></i>
-                                    Delete List
                                 </button>
                             </form>
                         </div>
@@ -216,6 +229,23 @@ $name_stmt->close();
         <?php endif; ?>
     </div>
 
+    <div id="task-panel-overlay" class="task-panel-overlay"></div>
+    <aside id="task-panel" class="task-panel" aria-hidden="true">
+        <div class="panel-header">
+            <div>
+                <h3 id="task-panel-title">List Details</h3>
+                <p id="task-panel-subtitle" class="panel-subtitle"></p>
+            </div>
+            <button type="button" class="close-panel-btn" id="closeTaskPanel" aria-label="Close panel">&times;</button>
+        </div>
+        <div class="panel-content">
+            <div id="task-details-content"></div>
+        </div>
+    </aside>
+
+    <script>
+        window.listItems = <?php echo json_encode($list_items, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
+    </script>
     <script src="js/index.js"></script>
 </body>
 </html>
