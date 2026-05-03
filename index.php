@@ -77,6 +77,7 @@ $name_stmt->bind_param("i", $user_id);
 $name_stmt->execute();
 $name_result = $name_stmt->get_result();
 $name = ($name_row = $name_result->fetch_assoc()) ? $name_row['username'] : 'User';
+$_SESSION['username'] = $name; 
 $name_stmt->close();
 
 
@@ -109,7 +110,7 @@ $name_stmt->close();
         <div class="sidebar-header">
             <div class="sidebar-logo">
                 <img src="img/circular-logo.png" alt="Listahan Logo" class="logo">
-                <span class="logo-text">Listahan</span>
+                <span class="logo-text" style="font-weight:bold;font-size:25px;">Listahan</span>
             </div>
             <button class="sidebar-toggle-btn sidebar-toggle" title="Collapse sidebar">
                 <i class="fa fa-chevron-left" style="color: var(--color-text-placeholder); padding:0; font-size:0.85rem;"></i>
