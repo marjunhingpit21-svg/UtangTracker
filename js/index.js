@@ -116,6 +116,33 @@ overlay.addEventListener('click', () => {
     overlay.classList.remove('active');
 });
 
+const toggleEditBtn = document.getElementById('toggleEditBtn');
+const cancelEditBtn = document.getElementById('cancelEditBtn');
+const profileCard = document.querySelector('.profile-card.overview-card');
+
+function setProfileEditState(isEditing) {
+    if (!profileCard || !toggleEditBtn) return;
+    profileCard.classList.toggle('editing', isEditing);
+    toggleEditBtn.innerHTML = `
+        <span class="material-symbols-outlined">${isEditing ? 'close' : 'edit'}</span>
+        ${isEditing ? 'Cancel' : 'Edit'}
+    `;
+    toggleEditBtn.setAttribute('aria-expanded', isEditing ? 'true' : 'false');
+}
+
+if (toggleEditBtn) {
+    toggleEditBtn.addEventListener('click', () => {
+        const isEditing = profileCard.classList.contains('editing');
+        setProfileEditState(!isEditing);
+    });
+}
+
+if (cancelEditBtn) {
+    cancelEditBtn.addEventListener('click', () => {
+        setProfileEditState(false);
+    });
+}
+
 document.querySelectorAll('.debt-list').forEach(card => {
     card.addEventListener('click', event => {
         if (event.target.closest('button, form, a')) return;

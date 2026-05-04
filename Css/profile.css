@@ -1,6 +1,5 @@
 
-
-.profile-header {
+.profile-header, .delete-account {
     background: var(--color-bg-sidebar);
     border-radius: 12px;
     padding: 24px;
@@ -15,7 +14,7 @@
     position: absolute;
     top: 16px;
     left: 16px;
-    background: #ea565b;
+    background: #eaa356;
     border: none;
     width: 40px;
     height: 40px;
@@ -28,7 +27,7 @@
 }
 
 .profile-header .mobile-menu-toggle:hover {
-    background: #d63031;
+    background: #d68630;
 }
 
 .profile-header .mobile-menu-toggle .material-symbols-outlined {
@@ -83,6 +82,42 @@
     margin: 0;
 }
 
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.save-btn {
+    background: #28a745 !important;   /* Green */
+    color: white;
+    display: none;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s ease;
+}
+
+.save-btn:hover {
+    background: #218838 !important;
+}
+
+.profile-card.editing .save-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s ease;
+}
+
+
 .toggle-edit-btn {
     display: flex;
     align-items: center;
@@ -98,7 +133,7 @@
 }
 
 .toggle-edit-btn:hover {
-    background: #d63031;
+    background: #d68630;
 }
 
 /* Profile Overview */
@@ -203,6 +238,48 @@
     gap: 20px;
 }
 
+.profile-edit {
+    display: none;
+}
+
+.profile-card.editing .profile-view {
+    display: none;
+}
+
+.profile-card.editing .profile-edit {
+    display: flex;
+}
+
+.profile-card.editing .profile-avatar-section {
+    display: none;
+}
+
+
+.profile-card.editing .profile-edit {
+    display: flex;
+}
+
+
+.profile-message {
+    margin-bottom: 18px;
+    padding: 16px;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+.profile-message.success {
+    background: #ebf8f1;
+    border: 1px solid #9ae1bb;
+    color: #17663f;
+}
+
+.profile-message.error {
+    background: #fff0f0;
+    border: 1px solid #f5b5b5;
+    color: #a82f2f;
+}
+
 .profile-form.disabled input:not([type="submit"]),
 .profile-form.disabled select {
     opacity: 0.7;
@@ -250,12 +327,37 @@
     cursor: pointer;
     font-weight: 500;
     transition: background 0.2s ease;
+    order: 2;
 }
 
 .edit-btn:hover {
     background: #ba4e06;
 }
 
+.edit-btn.cancel-mode {
+    background: #6c757d;
+}
+
+.edit-btn.cancel-mode:hover {
+    background: #5a6268;
+}
+
+.card-header {
+    position: relative;
+}
+
+.form-actions {
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    display: none;
+    gap: 12px;
+}
+
+
+.profile-card.editing .form-actions {
+    display: flex;
+}
 .form-group input:focus,
 .form-group select:focus {
     outline: none;
@@ -292,20 +394,17 @@
     transition: all 0.2s ease;
 }
 
-.btn-primary {
+.save-btn {
     background: var(--color-hover-primary);
     color: white;
+    display: none;
 }
 
-.btn-primary:hover {
-    background: #d63031;
+.profile-card.editing .save-btn {
+    display: flex;
 }
 
-.btn-secondary {
-    background: var(--color-bg-secondary);
-    color: var(--color-text-primary);
-    border: 1px solid var(--color-border-hr);
-}
+
 
 .btn-secondary:hover {
     background: var(--color-hover-secondary);
@@ -316,6 +415,39 @@
 .password-card {
     grid-column: span 1;
 }
+
+.delete-account {
+    margin-top: 20px;
+}
+
+.delete-account h3 {
+    color: var(--color-text-primary);
+    font-size: 1.3rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.delete-account .warning-text {
+    color: red;
+    font-size: 0.9rem;
+    margin-bottom: 16px;
+}
+
+.delete-account button {
+    background: #fa6909;
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background 0.2s ease;
+}
+
+.delete-account button:hover {
+    background: red;
+}
+
 
 /* Responsive Design */
 @media (max-width: 1200px) {
