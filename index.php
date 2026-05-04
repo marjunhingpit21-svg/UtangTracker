@@ -216,6 +216,11 @@ $name_stmt->close();
                             <div class="total-owed">
                                 Unpaid: ₱<?php echo number_format($list['total_owed'], 2); ?>
                             </div>
+                            <!-- Edit button now links to edit_list.php -->
+                            <a href="edit_list.php?list_id=<?php echo $list['list_id']; ?>" class="btn-small btn-edit"
+                               title="Edit this list">
+                                <i class="fa fa-edit" style="padding:0; color:white; font-size:0.75rem;"></i>
+                            </a>
                             <form method="POST" action="" class="inline-form"
                                 onsubmit="return confirm('Delete this entire list and all its items?');">
                                 <input type="hidden" name="list_id" value="<?php echo $list['list_id']; ?>">

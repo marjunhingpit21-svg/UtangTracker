@@ -50,9 +50,10 @@ function openTaskPanel(listId, card) {
         taskDetailsContent.innerHTML = '<div class="task-detail-empty">No list content available.</div>';
     } else {
         taskDetailsContent.innerHTML = listItems.map(item => {
-            const statusClass = item.debt_status === 'paid' ? 'status-paid' : 'status-unpaid';
+            const isPaid = item.debt_status === 'paid';
+            const statusClass = isPaid ? 'status-paid' : 'status-unpaid';
             return `
-                <div class="task-item">
+                <div class="task-item" data-content-id="${item.content_id}">
                     <div class="task-item-top">
                         <span class="task-item-name">${item.content_name}</span>
                         <span class="task-item-status ${statusClass}">${item.debt_status}</span>
@@ -61,9 +62,49 @@ function openTaskPanel(listId, card) {
                         <span>Amount: ${formatMoney(item.money_owed)}</span>
                         <span>Deadline: ${formatDeadline(item.deadline)}</span>
                     </div>
+                    <div class="task-item-actions">
+                        ${!isPaid ? `<button class="btn-mark-paid" data-content-id="${item.content_id}">
+                            <i class="fa fa-check"></i> Mark as Paid
+                        </button>` : `<span class="paid-label"><i class="fa fa-check-circle"></i> Paid</span>`}
+                    </div>
                 </div>
             `;
         }).join('');
+
+        taskDetailsContent.querySelectorAll('.btn-mark-paid').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const contentId = btn.dataset.contentId;
+                btn.disabled = true;
+                btn.textContent = 'Updating…';
+
+                const formData = new FormData();
+                formData.append('update_status', '1');
+                formData.append('content_id', contentId);
+                formData.append('new_status', 'paid');
+
+                try {
+                    await fetch('index.php', { method: 'POST', body: formData });
+
+                    // Update local data
+                    for (const items of Object.values(window.listItems)) {
+                        const item = items.find(i => String(i.content_id) === String(contentId));
+                        if (item) { item.debt_status = 'paid'; break; }
+                    }
+
+                    // Re-render the task item
+                    const taskItem = taskDetailsContent.querySelector(`.task-item[data-content-id="${contentId}"]`);
+                    if (taskItem) {
+                        taskItem.querySelector('.task-item-status').className = 'task-item-status status-paid';
+                        taskItem.querySelector('.task-item-status').textContent = 'paid';
+                        taskItem.querySelector('.task-item-actions').innerHTML =
+                            `<span class="paid-label"><i class="fa fa-check-circle"></i> Paid</span>`;
+                    }
+                } catch {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fa fa-check"></i> Mark as Paid';
+                }
+            });
+        });
     }
 
     taskPanel.classList.add('open');
