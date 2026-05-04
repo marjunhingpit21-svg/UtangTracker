@@ -78,17 +78,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <?php endif; ?>
                 </div>
                 <div class="field input">
-                    <input type="text" name="Username" id="Username" placeholder="Username" required>
+                    <input type="text" name="username" id="Username" placeholder="Username" required>
                 </div>
                 
                 <div class="field input">
-                    <input type="email" name="Email" id="Email" placeholder="Email Address" required>
+                    <input type="email" name="email" id="Email" placeholder="Email Address" required>
                 </div>
                 <div class="field input">
-                    <input type="password" name="Password" id="Password" placeholder="Password" required>
+                    <input type="password" name="password" id="Password" placeholder="Password" required>
                 </div>
                 <div class="field input">
-                    <input type="password" name="ConfirmPassword" id="ConfirmPassword" placeholder="Confirm Password" required>
+                    <input type="password" name="confirm_password" id="ConfirmPassword" placeholder="Confirm Password" required>
                 </div>
 
                 <div class="button">

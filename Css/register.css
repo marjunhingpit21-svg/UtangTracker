@@ -20,7 +20,7 @@ html, body {
 .description {
     grid-area: 1 / 1 / 2 / 2;
     background-color: #fa6909;
-    background-image: url('../Img/loginpage.jpg');
+    background-image: url('../img/loginpage.jpg');
     background-size: cover;
     background-position: 127px center;
     background-repeat: no-repeat;
@@ -358,15 +358,18 @@ label i {
         min-height: 100vh;
     }
 
+    /* Hide the left panel (orange background with image) entirely on mobile */
     .description {
-        min-height: 200px;
-        height: 220px;
-        background-position: center;
+        display: none;
     }
 
+    /* Make the registration area take full width and start from top */
     .loginarea {
         padding: 20px 20px 40px;
         justify-content: flex-start;
+        width: 100%;
+        margin-top: 150px;
+        box-sizing: border-box;
     }
 
     .logo {

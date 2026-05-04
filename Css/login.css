@@ -1,22 +1,17 @@
 .parent {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    grid-template-rows: repeat(5, 1fr);
-    gap: 8px;
-    height: 100vh;
+    grid-template-columns: 3fr 2fr;
+    grid-template-rows: 1fr;
+    min-height: 100vh;
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
-    background-attachment: fixed;
 }
-
-
 
 html, body {
     margin: 0;
     padding: 0;
     height: 100%;
-    overflow: hidden;
 }
 
 h1 {
@@ -38,15 +33,29 @@ h1 {
     margin-left: 50px;
 }
 
-.loginarea {
-    grid-area: 1 / 4 / 6 / 6;
-    align-items: center;
-    justify-items: center;
-    margin-top: 200px;
+.description {
+    grid-area: 1 / 1 / 2 / 2;
+    background-color: #fa6909;
+    background-image: url('../img/loginpage.jpg');
+    background-size: cover;
+    background-position: 127px center;
+    background-repeat: no-repeat;
+    filter: brightness(1.1);
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
-    
+    min-height: 100vh;
 }
 
+.loginarea {
+    grid-area: 1 / 2 / 2 / 3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 30px;
+    overflow-y: auto;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    box-sizing: border-box;
+}
 
 .logo-container {
     text-align: center;
@@ -54,25 +63,28 @@ h1 {
 }
 
 .logo {
-    width: 200px;
-    height: 200px;
+    width: 160px;
+    height: 160px;
     object-fit: contain;
-    margin-top: -120px;
-    margin-bottom: -20px;
+    margin-top: 20px;
+    margin-bottom: -10px;
 }
 
 .header {
-    font-size: 70px;
+    font-size: clamp(40px, 6vw, 70px);
     color: #fa6909;
     font-weight: 600;
     text-align: center;
+    margin-top: -3px;
+    margin-bottom: 0;
 }
 
 .header1 {
-    font-size: 20px;
+    font-size: clamp(14px, 2vw, 20px);
     color: #fa6909;
     font-weight: 600;
     text-align: center;
+    margin-top: 5px;
 }
 
 label i {
@@ -82,10 +94,11 @@ label i {
 }
 
 .field input {
-    width: 325px;
+    width: 100%;
+    max-width: 325px;
     height: 35px;
-    margin-bottom: 25px;
-    margin-top:15px;
+    margin-top: 10px;
+    margin-bottom: 10px;
     padding-left: 10px;
     border-radius: 10px;
     border-style: solid;
@@ -93,13 +106,10 @@ label i {
     color: #273545;
     font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 12px;
+    box-sizing: border-box;
 }
 
-.field input:hover {
-    box-shadow: 0 0 8px rgba(251, 120, 6, 0.8);
-    outline: none;
-}
-
+.field input:hover,
 .field input:focus {
     box-shadow: 0 0 8px rgba(251, 120, 6, 0.8);
     outline: none;
@@ -116,6 +126,7 @@ label i {
     border-radius: 25px;
     border: none;
     background: #FB7806;
+    cursor: pointer;
 }
 
 .button:hover, .btn:hover {
@@ -126,7 +137,8 @@ label i {
     transition: transform 0.2s ease-in-out;
 }
 
-.registrationlink, .loginlink {
+.registrationlink,
+.loginlink {
     text-align: center;
     margin-top: 10px;
 }
@@ -195,4 +207,45 @@ label i {
 @keyframes spin {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
+}
+/* ===== RESPONSIVE: SMALL SCREENS (matches register.css behavior) ===== */
+@media (max-width: 680px) {
+    body {
+        overflow-y: auto;
+    }
+
+    .parent {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+    }
+
+    /* Hide the left panel (orange background) entirely on mobile */
+    .description {
+        display: none;
+    }
+
+    /* Make the login area take full width and start from top */
+    .loginarea {
+        padding: 20px 20px 40px;
+        justify-content: flex-start;
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+    .logo {
+        width: 100px;
+        height: 100px;
+        margin-top: 200px;
+    }
+
+    .field input {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .field {
+        max-width: 100%;
+        width: 100%;
+    }
 }
