@@ -10,10 +10,10 @@
 :root {
     --color-text-primary: #2a1b0f;
     --color-text-placeholder: #4a4a4a;
-    --color-bg-primary: #f4f0e8;
-    --color-bg-secondary: #ece5d6;
+    --color-bg-primary: #ffffff;
+    --color-bg-secondary: #ffe8b7;
     --color-bg-sidebar: #ffffff;
-    --color-border-hr: #cab8ab;;
+    /* --color-border-hr: #cab8ab;; */
     --color-accent: #fa6909;
     --color-accent-hover: #fa7822;
     --color-hover-secondary: #f5e9e0;
@@ -23,7 +23,7 @@
 }
 
 body {
-    background: #ffdcc5;
+    background: #ffffff;
     min-height: 100vh;
     display: flex;
 }
@@ -235,6 +235,27 @@ body {
 .filter-btn:hover {
     background: var(--color-hover-secondary);
     border-color: var(--color-hover-primary);
+}
+
+/* Search input in filters area */
+.search-container {
+    margin-top: 15px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 15px;
+    border-radius: 8px;
+    border: 1px solid var(--color-border-hr);
+    background: var(--color-bg-secondary);
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--color-accent);
+    box-shadow: 0 0 0 2px rgba(250, 105, 9, 0.2);
 }
 
 /* .filter-btn.active {

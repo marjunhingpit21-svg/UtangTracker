@@ -9,7 +9,7 @@ if (!isset($_SESSION['user_id'])) {
 
 $user_id = $_SESSION['user_id'];
 
-
+// Handle POST actions
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['update_status'])) {
         $content_id = $_POST['content_id'];
@@ -39,6 +39,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     exit();
 }
 
+// Fetch debt lists
 $query = "SELECT dl.list_id, dl.title, dl.creditor, dl.created_at, IFNULL(SUM(CASE WHEN lc.debt_status = 'unpaid' THEN lc.money_owed ELSE 0 END), 0) AS total_owed " .
          "FROM debt_list dl " .
          "LEFT JOIN list_content lc ON dl.list_id = lc.list_id " .
@@ -55,6 +56,7 @@ while ($row = $result->fetch_assoc()) {
 }
 $stmt->close();
 
+// Fetch all list items for status calculation
 $item_query = "SELECT lc.content_id, lc.list_id, lc.content_name, lc.money_owed, lc.deadline, lc.debt_status " .
               "FROM list_content lc " .
               "JOIN debt_list dl ON lc.list_id = dl.list_id " .
@@ -77,10 +79,8 @@ $name_stmt->bind_param("i", $user_id);
 $name_stmt->execute();
 $name_result = $name_stmt->get_result();
 $name = ($name_row = $name_result->fetch_assoc()) ? $name_row['username'] : 'User';
-$_SESSION['username'] = $name; 
+$_SESSION['username'] = $name;
 $name_stmt->close();
-
-
 ?>
 
 <!DOCTYPE html>
@@ -88,10 +88,52 @@ $name_stmt->close();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Listahan – Debt Tracker</title>
+    <title>Listahan Debt Tracker</title>
     <link href="Css/index.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"/>
+    <style>
+        /* Quick inline style to align search bar to the right within filters */
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+        .task-filters {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .search-wrapper {
+            display: flex;
+            align-items: center;
+        }
+        .search-wrapper input {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--color-border-hr);
+            background: var(--color-bg-secondary);
+            font-size: 0.9rem;
+            width: 220px;
+            transition: all 0.2s ease;
+        }
+        .search-wrapper input:focus {
+            outline: none;
+            border-color: var(--color-accent);
+            box-shadow: 0 0 0 2px rgba(250, 105, 9, 0.2);
+        }
+        @media (max-width: 680px) {
+            .filters {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .search-wrapper input {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
 
@@ -119,12 +161,7 @@ $name_stmt->close();
 
         <div class="sidebar-content">
             <ul class="menu-list">
-                <li class="menu-items">
-                    <form action="#" class="search-form">
-                        <span class="material-symbols-outlined">search</span>
-                        <input type="search" name="query" placeholder="Search list..." required>
-                    </form>
-                </li>
+                <!-- Search bar removed from sidebar -->
                 <li class="menu-items">
                     <a href="index.php" class="menu-link active">
                         <i class="fa fa-home"></i>
@@ -164,7 +201,7 @@ $name_stmt->close();
                     $hour = (int) $now->format('G');
                     $greeting = ($hour < 12) ? 'Morning' : (($hour < 17) ? 'Afternoon' : 'Evening');
                 ?>
-                <h1>Good <?php echo $greeting; ?>, <?php echo htmlspecialchars($name); ?>! 👋</h1>
+                <h1>Good <?php echo $greeting; ?>, <?php echo htmlspecialchars($name); ?>!</h1>
                 </div>
                 <div class="greet-date">
                     <span class="material-symbols-outlined">calendar_today</span>
@@ -173,68 +210,74 @@ $name_stmt->close();
             </div>
         </div>
 
+        <!-- Filters + Search (inline, search on the right) -->
         <div class="filters">
             <div class="task-filters">
                 <button class="filter-btn active" data-filter="all">
                     <span class="material-symbols-outlined">view_list</span>
                     All Lists
-                    <span class="filter-count">0</span>
+                    <span class="filter-count" id="count-all">0</span>
                 </button>
                 <button class="filter-btn" data-filter="completed">
                     <span class="material-symbols-outlined">task_alt</span>
                     Completed
-                    <span class="filter-count">0</span>
+                    <span class="filter-count" id="count-completed">0</span>
                 </button>
                 <button class="filter-btn" data-filter="pending">
                     <span class="material-symbols-outlined">pending_actions</span>
                     Pending
-                    <span class="filter-count">0</span>
+                    <span class="filter-count" id="count-pending">0</span>
                 </button>
+            </div>
+            <div class="search-wrapper">
+                <input type="text" id="searchInput" placeholder="Search by title or creditor...">
             </div>
         </div>
 
-        <!-- Debt Lists -->
-        <?php if (empty($debt_lists)): ?>
-            <div class="debt-list">
-                <div class="no-data">
-                    <p>No debt lists yet. Create your first debt list to get started.</p>
-                </div>
-            </div>
-        <?php else: ?>
-            <?php foreach ($debt_lists as $list): ?>
-                <div class="debt-list" data-list-id="<?php echo $list['list_id']; ?>">
-                    <div class="list-header">
-                        <div>
-                            <h3><?php echo htmlspecialchars($list['title']); ?></h3>
-                            <p>
-                                Creditor: <?php echo htmlspecialchars($list['creditor']); ?>
-                                &nbsp;·&nbsp;
-                                Created: <?php echo date('M d, Y', strtotime($list['created_at'])); ?>
-                            </p>
-                        </div>
-                        <div class="list-header-right">
-                            <div class="total-owed">
-                                Unpaid: ₱<?php echo number_format($list['total_owed'], 2); ?>
-                            </div>
-                            <!-- Edit button now links to edit_list.php -->
-                            <a href="edit_list.php?list_id=<?php echo $list['list_id']; ?>" class="btn-small btn-edit"
-                               title="Edit this list">
-                                <i class="fa fa-edit" style="padding:0; color:white; font-size:0.75rem;"></i>
-                            </a>
-                            <form method="POST" action="" class="inline-form"
-                                onsubmit="return confirm('Delete this entire list and all its items?');">
-                                <input type="hidden" name="list_id" value="<?php echo $list['list_id']; ?>">
-                                <button type="submit" name="delete_list" class="btn-small btn-delete">
-                                    <i class="fa fa-trash" style="padding:0; color:white; font-size:0.75rem;"></i>
-                                </button>
-                            </form>
-                        </div>
+        <!-- Debt Lists Container -->
+        <div id="lists-container">
+            <?php if (empty($debt_lists)): ?>
+                <div class="debt-list">
+                    <div class="no-data">
+                        <p>No debt lists yet. Create your first debt list to get started.</p>
                     </div>
                 </div>
-            <?php endforeach; ?>
-        <?php endif; ?>
+            <?php else: ?>
+                <?php foreach ($debt_lists as $list): ?>
+                    <div class="debt-list" data-list-id="<?php echo $list['list_id']; ?>">
+                        <div class="list-header">
+                            <div>
+                                <h3><?php echo htmlspecialchars($list['title']); ?></h3>
+                                <p>
+                                    Creditor: <?php echo htmlspecialchars($list['creditor']); ?>
+                                    &nbsp;·&nbsp;
+                                    Created: <?php echo date('M d, Y', strtotime($list['created_at'])); ?>
+                                </p>
+                            </div>
+                            <div class="list-header-right">
+                                <div class="total-owed">
+                                    Unpaid: ₱<?php echo number_format($list['total_owed'], 2); ?>
+                                </div>
+                                <a href="edit_list.php?list_id=<?php echo $list['list_id']; ?>" class="btn-small btn-edit"
+                                   title="Edit this list">
+                                    <i class="fa fa-edit" style="padding:0; color:white; font-size:0.75rem;"></i>
+                                </a>
+                                <form method="POST" action="" class="inline-form"
+                                    onsubmit="return confirm('Delete this entire list and all its items?');">
+                                    <input type="hidden" name="list_id" value="<?php echo $list['list_id']; ?>">
+                                    <button type="submit" name="delete_list" class="btn-small btn-delete">
+                                        <i class="fa fa-trash" style="padding:0; color:white; font-size:0.75rem;"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                <?php endforeach; ?>
+            <?php endif; ?>
+        </div>
     </div>
 
+    <!-- Task panel (unchanged) -->
     <div id="task-panel-overlay" class="task-panel-overlay"></div>
     <aside id="task-panel" class="task-panel" aria-hidden="true">
         <div class="panel-header">
@@ -253,5 +296,112 @@ $name_stmt->close();
         window.listItems = <?php echo json_encode($list_items, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_HEX_AMP); ?>;
     </script>
     <script src="js/index.js"></script>
+
+    <!-- Filter & Search Script (works with existing js/index.js) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            const searchInput = document.getElementById('searchInput');
+            const listsContainer = document.getElementById('lists-container');
+
+            let currentFilter = 'all';
+            let currentSearch = '';
+
+            // Determine if a list is 'completed' (all debts paid) or 'pending' (at least one unpaid)
+            function getListStatus(listId) {
+                const items = window.listItems[listId] || [];
+                if (items.length === 0) return 'all';   // empty list – treat as 'all' (shows in all filters)
+                const allPaid = items.every(item => item.debt_status === 'paid');
+                return allPaid ? 'completed' : 'pending';
+            }
+
+            // Update the badge numbers for each filter
+            function updateFilterCounts() {
+                const lists = document.querySelectorAll('#lists-container .debt-list');
+                let allCount = 0, completedCount = 0, pendingCount = 0;
+                lists.forEach(list => {
+                    const listId = parseInt(list.dataset.listId);
+                    if (isNaN(listId)) return;
+                    const status = getListStatus(listId);
+                    allCount++;
+                    if (status === 'completed') completedCount++;
+                    if (status === 'pending') pendingCount++;
+                });
+                document.getElementById('count-all').innerText = allCount;
+                document.getElementById('count-completed').innerText = completedCount;
+                document.getElementById('count-pending').innerText = pendingCount;
+            }
+
+            // Apply both search and filter
+            function applyFilter() {
+                const lists = document.querySelectorAll('#lists-container .debt-list');
+                let visibleCount = 0;
+                lists.forEach(list => {
+                    const listId = parseInt(list.dataset.listId);
+                    if (isNaN(listId)) return;
+
+                    // Filter logic
+                    let filterMatch = false;
+                    if (currentFilter === 'all') filterMatch = true;
+                    else {
+                        const status = getListStatus(listId);
+                        filterMatch = (currentFilter === status);
+                    }
+
+                    // Search logic (title or creditor)
+                    let searchMatch = true;
+                    if (currentSearch.trim() !== '') {
+                        const titleElem = list.querySelector('.list-header h3');
+                        const creditorElem = list.querySelector('.list-header p');
+                        const title = titleElem ? titleElem.innerText.toLowerCase() : '';
+                        const creditor = creditorElem ? creditorElem.innerText.toLowerCase() : '';
+                        const searchTerm = currentSearch.toLowerCase();
+                        searchMatch = title.includes(searchTerm) || creditor.includes(searchTerm);
+                    }
+
+                    if (filterMatch && searchMatch) {
+                        list.style.display = '';
+                        visibleCount++;
+                    } else {
+                        list.style.display = 'none';
+                    }
+                });
+
+                // Show "no results" message if needed
+                let noResultsMsg = listsContainer.querySelector('.no-results-message');
+                if (visibleCount === 0 && listsContainer.querySelectorAll('.debt-list').length > 0) {
+                    if (!noResultsMsg) {
+                        noResultsMsg = document.createElement('div');
+                        noResultsMsg.className = 'debt-list no-results-message';
+                        noResultsMsg.innerHTML = '<div class="no-data"><p>No lists match your search or filter.</p></div>';
+                        listsContainer.appendChild(noResultsMsg);
+                    }
+                } else {
+                    if (noResultsMsg) noResultsMsg.remove();
+                }
+            }
+
+            // Event listeners
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilter = this.getAttribute('data-filter');
+                    applyFilter();
+                });
+            });
+
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    currentSearch = e.target.value;
+                    applyFilter();
+                });
+            }
+
+            // Initial updates
+            updateFilterCounts();
+            applyFilter();
+        });
+    </script>
 </body>
 </html>
