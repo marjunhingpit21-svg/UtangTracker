@@ -137,12 +137,17 @@ $name_stmt->close();
 </head>
 <body>
 
-    <!-- Mobile top nav -->
+    <!-- Mobile top nav - hidden on mobile, replaced by FAB -->
     <nav class="site-nav">
         <button class="mobile-menu-btn sidebar-toggle">
             <i class="fa fa-bars" style="color:white; padding:0;"></i>
         </button>
     </nav>
+
+    <!-- Floating Action Button for mobile (shown only on small screens) -->
+    <button class="sidebar-toggle mobile-fab-btn" aria-label="Open menu">
+        <i class="fa fa-bars" style="color:white; font-size: 1.3rem;"></i>
+    </button>
 
     <!-- Sidebar overlay -->
     <div class="sidebar-overlay" id="sidebarOverlay"></div>
@@ -161,7 +166,6 @@ $name_stmt->close();
 
         <div class="sidebar-content">
             <ul class="menu-list">
-                <!-- Search bar removed from sidebar -->
                 <li class="menu-items">
                     <a href="index.php" class="menu-link active">
                         <i class="fa fa-home"></i>
@@ -277,7 +281,7 @@ $name_stmt->close();
         </div>
     </div>
 
-    <!-- Task panel (unchanged) -->
+    <!-- Task panel -->
     <div id="task-panel-overlay" class="task-panel-overlay"></div>
     <aside id="task-panel" class="task-panel" aria-hidden="true">
         <div class="panel-header">
@@ -297,7 +301,7 @@ $name_stmt->close();
     </script>
     <script src="js/index.js"></script>
 
-    <!-- Filter & Search Script (works with existing js/index.js) -->
+    <!-- Filter & Search Script -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const filterBtns = document.querySelectorAll('.filter-btn');
@@ -307,15 +311,13 @@ $name_stmt->close();
             let currentFilter = 'all';
             let currentSearch = '';
 
-            // Determine if a list is 'completed' (all debts paid) or 'pending' (at least one unpaid)
             function getListStatus(listId) {
                 const items = window.listItems[listId] || [];
-                if (items.length === 0) return 'all';   // empty list – treat as 'all' (shows in all filters)
+                if (items.length === 0) return 'all';
                 const allPaid = items.every(item => item.debt_status === 'paid');
                 return allPaid ? 'completed' : 'pending';
             }
 
-            // Update the badge numbers for each filter
             function updateFilterCounts() {
                 const lists = document.querySelectorAll('#lists-container .debt-list');
                 let allCount = 0, completedCount = 0, pendingCount = 0;
@@ -332,7 +334,6 @@ $name_stmt->close();
                 document.getElementById('count-pending').innerText = pendingCount;
             }
 
-            // Apply both search and filter
             function applyFilter() {
                 const lists = document.querySelectorAll('#lists-container .debt-list');
                 let visibleCount = 0;
@@ -340,7 +341,6 @@ $name_stmt->close();
                     const listId = parseInt(list.dataset.listId);
                     if (isNaN(listId)) return;
 
-                    // Filter logic
                     let filterMatch = false;
                     if (currentFilter === 'all') filterMatch = true;
                     else {
@@ -348,7 +348,6 @@ $name_stmt->close();
                         filterMatch = (currentFilter === status);
                     }
 
-                    // Search logic (title or creditor)
                     let searchMatch = true;
                     if (currentSearch.trim() !== '') {
                         const titleElem = list.querySelector('.list-header h3');
@@ -367,7 +366,6 @@ $name_stmt->close();
                     }
                 });
 
-                // Show "no results" message if needed
                 let noResultsMsg = listsContainer.querySelector('.no-results-message');
                 if (visibleCount === 0 && listsContainer.querySelectorAll('.debt-list').length > 0) {
                     if (!noResultsMsg) {
@@ -381,7 +379,6 @@ $name_stmt->close();
                 }
             }
 
-            // Event listeners
             filterBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
                     filterBtns.forEach(b => b.classList.remove('active'));
@@ -398,7 +395,6 @@ $name_stmt->close();
                 });
             }
 
-            // Initial updates
             updateFilterCounts();
             applyFilter();
         });
