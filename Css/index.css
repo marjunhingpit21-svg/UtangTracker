@@ -942,3 +942,12 @@ button {
         flex-shrink: 0;
     }
 }
+
+.debt-list.fully-paid .list-header {
+    background: #10b981 !important;
+}
+
+.debt-list.fully-paid .total-owed {
+    background: rgba(255,255,255,0.3) !important;
+    color: white !important;
+}
