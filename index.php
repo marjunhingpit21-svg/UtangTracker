@@ -18,6 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $stmt->bind_param("si", $new_status, $content_id);
         $stmt->execute();
         $stmt->close();
+        
     } elseif (isset($_POST['delete_debt'])) {
         $content_id = $_POST['content_id'];
         $stmt = $conn->prepare("DELETE FROM list_content WHERE content_id = ?");
