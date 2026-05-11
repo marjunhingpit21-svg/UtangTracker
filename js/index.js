@@ -99,6 +99,29 @@ function openTaskPanel(listId, card) {
                         taskItem.querySelector('.task-item-actions').innerHTML =
                             `<span class="paid-label"><i class="fa fa-check-circle"></i> Paid</span>`;
                     }
+
+                    const item = window.listItems[listId]?.find(i => String(i.content_id) === String(contentId));
+                    const unpaidTotal = (window.listItems[listId] ?? [])
+                        .filter(i => i.debt_status !== 'paid')
+                        .reduce((sum, i) => sum + (i.money_owed || 0), 0);
+
+                    const totalElem = document.querySelector(`.total-owed[data-list-id="${listId}"]`);
+                    if (totalElem) totalElem.textContent = formatMoney(unpaidTotal);
+
+                    
+
+                    // Update list card to show "Paid" when total is 0
+                    const listCard = document.querySelector(`.debt-list[data-list-id="${listId}"]`);
+                    if (listCard) {
+                        if (unpaidTotal <= 0) {
+                            listCard.querySelector('.total-owed').innerHTML = `<span style="color:white; font-weight: 700;">✓ Fully Paid</span>`;
+                            
+                            const header = listCard.querySelector('.list-header');
+                            if (header) header.style.backgroundColor = '#10b981';
+                        }
+                    }
+
+                    
                 } catch {
                     btn.disabled = false;
                     btn.innerHTML = '<i class="fa fa-check"></i> Mark as Paid';

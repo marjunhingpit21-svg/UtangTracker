@@ -13,6 +13,17 @@ $errorMessage = '';
 $successMessage = '';
 $isEditing = false;
 
+// Handle errors redirected back from delete_account.php
+$deleteError = '';
+$deleteErrorMessages = [
+    'password_required' => 'Please enter your password to confirm deletion.',
+    'wrong_password'    => 'Incorrect password. Account deletion was cancelled.',
+    'server_error'      => 'A server error occurred. Please try again later.',
+];
+if (!empty($_GET['delete_error']) && isset($deleteErrorMessages[$_GET['delete_error']])) {
+    $deleteError = $deleteErrorMessages[$_GET['delete_error']];
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['action'] === 'update_profile') {
     $formUsername = trim($_POST['username'] ?? '');
     $formEmail = trim($_POST['email'] ?? '');
@@ -263,6 +274,37 @@ $isEditing = $isEditing || !empty($errorMessage);
 
     </div>
 
+    <!-- Delete Account Modal -->
+    <div class="delete-modal-overlay<?php echo $deleteError ? ' active' : ''; ?>" id="deleteModalOverlay" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+        <div class="delete-modal">
+            <div class="delete-modal-header">
+                <span class="material-symbols-outlined delete-modal-icon">warning</span>
+                <h2 id="deleteModalTitle">Delete Account</h2>
+            </div>
+            <div class="delete-modal-body">
+                <p>This action is <strong>permanent and irreversible</strong>. All your lists and data will be lost forever.</p>
+                <p>Enter your password to confirm account deletion.</p>
+                <div class="form-group" style="margin-top: 16px;">
+                    <label for="deletePasswordInput">Your Password</label>
+                    <div class="delete-password-wrapper">
+                        <input type="password" id="deletePasswordInput" placeholder="Enter your password" autocomplete="current-password">
+                        <button type="button" class="toggle-delete-pw" id="toggleDeletePw" aria-label="Toggle password visibility">
+                            <span class="material-symbols-outlined" id="toggleDeletePwIcon">visibility</span>
+                        </button>
+                    </div>
+                    <p class="delete-modal-error" id="deleteModalError"><?php echo htmlspecialchars($deleteError); ?></p>
+                </div>
+            </div>
+            <div class="delete-modal-footer">
+                <button type="button" class="delete-modal-cancel" id="deleteModalCancel">Cancel</button>
+                <button type="button" class="delete-modal-confirm" id="deleteModalConfirm">
+                    <span class="material-symbols-outlined" style="font-size:18px;">delete_forever</span>
+                    Delete My Account
+                </button>
+            </div>
+        </div>
+    </div>
+
     
     <script src="js/index.js"></script>
 
@@ -346,36 +388,98 @@ $isEditing = $isEditing || !empty($errorMessage);
             });
         }
 
-        const deleteAccountBtn = document.getElementById('deleteAccountBtn');
+        // ── Delete Account Modal ──────────────────────────────────────────
+        const deleteAccountBtn   = document.getElementById('deleteAccountBtn');
+        const deleteModalOverlay = document.getElementById('deleteModalOverlay');
+        const deleteModalCancel  = document.getElementById('deleteModalCancel');
+        const deleteModalConfirm = document.getElementById('deleteModalConfirm');
+        const deletePasswordInput = document.getElementById('deletePasswordInput');
+        const deleteModalError   = document.getElementById('deleteModalError');
+        const toggleDeletePw     = document.getElementById('toggleDeletePw');
+        const toggleDeletePwIcon = document.getElementById('toggleDeletePwIcon');
+
+        function openDeleteModal() {
+            deletePasswordInput.value = '';
+            deleteModalError.textContent = '';
+            deleteModalOverlay.classList.add('active');
+            deletePasswordInput.focus();
+        }
+
+        function closeDeleteModal() {
+            deleteModalOverlay.classList.remove('active');
+            deletePasswordInput.value = '';
+            deleteModalError.textContent = '';
+            deleteModalConfirm.disabled = false;
+            deleteModalConfirm.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;">delete_forever</span> Delete My Account';
+        }
+
         if (deleteAccountBtn) {
-            deleteAccountBtn.addEventListener('click', function() {
-                const confirmed = confirm('WARNING: This will permanently delete your account and ALL your data. This action cannot be undone.\n\nAre you absolutely sure you want to delete your account?');
-                
-                if (confirmed) {
-                    const finalConfirm = confirm('LAST WARNING: All your lists and data will be lost forever.\n\nType "DELETE" to confirm account deletion.');
-                    
-                    if (finalConfirm) {
-                        const deleteForm = document.createElement('form');
-                        deleteForm.method = 'POST';
-                        deleteForm.action = 'delete_account.php';
-                        deleteForm.style.display = 'none';
-                        
-                        const actionInput = document.createElement('input');
-                        actionInput.type = 'hidden';
-                        actionInput.name = 'action';
-                        actionInput.value = 'delete_account';
-                        
-                        const confirmInput = document.createElement('input');
-                        confirmInput.type = 'hidden';
-                        confirmInput.name = 'confirm';
-                        confirmInput.value = 'DELETE';
-                        
-                        deleteForm.appendChild(actionInput);
-                        deleteForm.appendChild(confirmInput);
-                        document.body.appendChild(deleteForm);
-                        deleteForm.submit();
-                    }
+            deleteAccountBtn.addEventListener('click', openDeleteModal);
+        }
+
+        if (deleteModalCancel) {
+            deleteModalCancel.addEventListener('click', closeDeleteModal);
+        }
+
+        // Close on overlay backdrop click
+        if (deleteModalOverlay) {
+            deleteModalOverlay.addEventListener('click', function(e) {
+                if (e.target === deleteModalOverlay) closeDeleteModal();
+            });
+        }
+
+        // Toggle password visibility
+        if (toggleDeletePw) {
+            toggleDeletePw.addEventListener('click', function() {
+                const isPw = deletePasswordInput.type === 'password';
+                deletePasswordInput.type = isPw ? 'text' : 'password';
+                toggleDeletePwIcon.textContent = isPw ? 'visibility_off' : 'visibility';
+            });
+        }
+
+        // Allow Enter key inside password field
+        if (deletePasswordInput) {
+            deletePasswordInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') deleteModalConfirm.click();
+                if (e.key === 'Escape') closeDeleteModal();
+            });
+        }
+
+        if (deleteModalConfirm) {
+            deleteModalConfirm.addEventListener('click', function() {
+                const pw = deletePasswordInput.value.trim();
+                if (!pw) {
+                    deleteModalError.textContent = 'Please enter your password.';
+                    deletePasswordInput.focus();
+                    return;
                 }
+
+                // Show loading state
+                deleteModalConfirm.disabled = true;
+                deleteModalConfirm.innerHTML = '<span class="material-symbols-outlined" style="font-size:18px;display:inline-block;">hourglass_top</span> Deleting...';
+                deleteModalError.textContent = '';
+
+                const deleteForm = document.createElement('form');
+                deleteForm.method = 'POST';
+                deleteForm.action = 'delete_account.php';
+                deleteForm.style.display = 'none';
+
+                const fields = {
+                    action: 'delete_account',
+                    confirm: 'DELETE',
+                    password: pw
+                };
+
+                Object.entries(fields).forEach(([name, value]) => {
+                    const input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.name = name;
+                    input.value = value;
+                    deleteForm.appendChild(input);
+                });
+
+                document.body.appendChild(deleteForm);
+                deleteForm.submit();
             });
         }
 

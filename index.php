@@ -249,7 +249,7 @@ $name_stmt->close();
                 </div>
             <?php else: ?>
                 <?php foreach ($debt_lists as $list): ?>
-                    <div class="debt-list" data-list-id="<?php echo $list['list_id']; ?>">
+                    <div class="debt-list <?php echo $list['total_owed'] <= 0 ? 'fully-paid' : ''; ?>" data-list-id="<?php echo $list['list_id']; ?>">
                         <div class="list-header">
                             <div>
                                 <h3><?php echo htmlspecialchars($list['title']); ?></h3>
@@ -260,8 +260,12 @@ $name_stmt->close();
                                 </p>
                             </div>
                             <div class="list-header-right">
-                                <div class="total-owed">
-                                    Unpaid: ₱<?php echo number_format($list['total_owed'], 2); ?>
+                                <div class="total-owed" data-list-id="<?php echo $list['list_id']; ?>">
+                                    <?php if ($list['total_owed'] <= 0): ?>
+                                        <span style="color:white; font-weight: 700;">✓ Fully Paid</span>
+                                    <?php else: ?>
+                                        Unpaid: ₱<?php echo number_format($list['total_owed'], 2); ?>
+                                    <?php endif; ?>
                                 </div>
                                 <a href="edit_list.php?list_id=<?php echo $list['list_id']; ?>" class="btn-small btn-edit"
                                    title="Edit this list">
